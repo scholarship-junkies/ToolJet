@@ -1665,4 +1665,51 @@ export const componentTypes = [
       },
     },
   },
+  {
+    name: 'RangeSlider',
+    displayName: 'Range slider',
+    description: 'Can be used to show slider with a range',
+    component: 'RangeSlider',
+    defaultSize: {
+      width: 9,
+      height: 30,
+    },
+    others: {
+      showOnDesktop: { type: 'toggle', displayName: 'Show on desktop' },
+      showOnMobile: { type: 'toggle', displayName: 'Show on mobile' },
+    },
+    properties: {
+      min: { type: 'code', displayName: 'Min' },
+      max: { type: 'code', displayName: 'Max' },
+      value: { type: 'code', displayName: 'Value' },
+    },
+    events: {},
+    styles: {
+      visibility: { type: 'code', displayName: 'Visibility' },
+    },
+    exposedVariables: {
+      value: null,
+    },
+    definition: {
+      others: {
+        showOnDesktop: { value: true },
+        showOnMobile: { value: false },
+      },
+      properties: {
+        min: {
+          value: '{{0}}',
+        },
+        max: {
+          value: '{{100}}',
+        },
+        value: {
+          value: '{{50}}',
+        },
+      },
+      events: [],
+      styles: {
+        visibility: { value: '{{true}}' },
+      },
+    },
+  },
 ];

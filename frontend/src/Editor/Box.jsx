@@ -32,6 +32,7 @@ import { Timer } from './Components/Timer';
 import { Pagination } from './Components/Pagination';
 import { Tags } from './Components/Tags';
 import { renderTooltip } from '../_helpers/appUtils';
+import { RangeSlider } from './Components/RangeSlider';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import '@/_styles/custom.scss';
 import { resolveProperties, resolveStyles } from './component-properties-resolution';
@@ -71,6 +72,7 @@ const AllComponents = {
   Timer,
   Pagination,
   Tags,
+  RangeSlider,
 };
 
 export const Box = function Box({
