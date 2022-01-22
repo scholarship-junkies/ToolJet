@@ -1682,6 +1682,8 @@ export const componentTypes = [
       min: { type: 'code', displayName: 'Min' },
       max: { type: 'code', displayName: 'Max' },
       value: { type: 'code', displayName: 'Value' },
+      enableTwoHandle: { type: 'toggle', displayName: 'Two handles' },
+      enableConnect: { type: 'toggle', displayName: 'Connect' },
     },
     events: {},
     styles: {
@@ -1705,6 +1707,8 @@ export const componentTypes = [
         value: {
           value: '{{50}}',
         },
+        enableTwoHandle: { value: false },
+        enableConnect: { value: false },
       },
       events: [],
       styles: {
