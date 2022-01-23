@@ -1687,6 +1687,9 @@ export const componentTypes = [
     },
     events: {},
     styles: {
+      lineColor: { type: 'color', displayName: 'Line color' },
+      handleColor: { type: 'color', displayName: 'Handle color' },
+      connectColor: { type: 'color', displayName: 'Connect color' },
       visibility: { type: 'code', displayName: 'Visibility' },
     },
     exposedVariables: {
@@ -1712,6 +1715,9 @@ export const componentTypes = [
       },
       events: [],
       styles: {
+        lineColor: { value: '#4D72FA' },
+        handleColor: { value: '#4D72FA' },
+        connectColor: { value: '#333C48' },
         visibility: { value: '{{true}}' },
       },
     },

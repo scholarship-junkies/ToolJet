@@ -6,18 +6,16 @@ import { resolveReferences } from '@/_helpers/utils';
 export const RangeSlider = function RangeSlider({
   component,
   currentState,
-  width,
   height,
   properties,
   styles,
   onComponentOptionsChanged,
 }) {
   const { value, min, max, enableTwoHandle, enableConnect } = properties;
-  const { visibility } = styles;
+  const { lineColor, handleColor, connectColor, visibility } = styles;
   const sliderRef = useRef(null);
 
   const computedStyles = {
-    width,
     height,
     display: visibility ? '' : 'none',
   };
@@ -30,6 +28,14 @@ export const RangeSlider = function RangeSlider({
         return [true, false, true];
       }
       return 'lower';
+    }
+  };
+
+  const setSliderStyles = () => {
+    if (sliderRef.current.noUiSlider) {
+      sliderRef.current.querySelector('.noUi-base').style.background = lineColor;
+      sliderRef.current.querySelector('.noUi-handle').style.background = handleColor;
+      enableConnect && (sliderRef.current.querySelector('.noUi-connect').style.background = connectColor);
     }
   };
 
@@ -46,6 +52,7 @@ export const RangeSlider = function RangeSlider({
     sliderRef.current.noUiSlider.on('set', (value) => {
       onComponentOptionsChanged(component, [['value', resolveReferences(value, currentState)]]);
     });
+    setSliderStyles();
   }
 
   useEffect(() => {
@@ -75,8 +82,13 @@ export const RangeSlider = function RangeSlider({
       });
   }, [min, max]);
 
+  useEffect(() => {
+    setSliderStyles();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lineColor, handleColor, connectColor]);
+
   return (
-    <div style={computedStyles}>
+    <div style={computedStyles} className="range-slider">
       <div id="slider" ref={sliderRef}></div>
     </div>
   );

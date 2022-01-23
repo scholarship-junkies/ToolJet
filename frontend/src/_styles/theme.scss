@@ -1,4 +1,5 @@
 @import "./tabler.scss";
+@import "./tabler-vendors.scss";
 @import "./colors.scss";
 @import "./z-index.scss";
 @import "./mixins.scss";
@@ -3598,5 +3599,11 @@ input[type="text"] {
         filter: invert(27%) sepia(84%) saturate(5230%) hue-rotate(212deg) brightness(102%) contrast(100%);
       }
     }
+  }
+}
+
+.range-slider{
+  .noUi-base {
+    background: #fff;
   }
 }
