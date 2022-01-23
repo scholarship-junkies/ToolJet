@@ -32,11 +32,9 @@ export const RangeSlider = function RangeSlider({
   };
 
   const setSliderStyles = () => {
-    if (sliderRef.current.noUiSlider) {
-      sliderRef.current.querySelector('.noUi-base').style.background = lineColor;
-      sliderRef.current.querySelector('.noUi-handle').style.background = handleColor;
-      enableConnect && (sliderRef.current.querySelector('.noUi-connect').style.background = connectColor);
-    }
+    sliderRef.current.querySelector('.noUi-base').style.background = lineColor;
+    sliderRef.current.querySelector('.noUi-handle').style.background = handleColor;
+    enableConnect && (sliderRef.current.querySelector('.noUi-connect').style.background = connectColor);
   };
 
   async function initializeSlider() {
@@ -66,20 +64,26 @@ export const RangeSlider = function RangeSlider({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enableTwoHandle, enableConnect]);
 
+  const convertValueToFloat = (value) => {
+    if (Array.isArray(value)) {
+      return value.map((item) => `${item.toFixed(2)}`);
+    }
+    return `${value.toFixed(2)}`;
+  };
+
   useEffect(() => {
-    sliderRef.current.noUiSlider && sliderRef.current.noUiSlider.set(enableTwoHandle ? toArray(value) : value);
+    sliderRef.current.noUiSlider.set(enableTwoHandle ? toArray(value) : value);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   // Update min and max
   useEffect(() => {
-    sliderRef.current &&
-      sliderRef.current.noUiSlider.updateOptions({
-        range: {
-          min: min,
-          max: max,
-        },
-      });
+    sliderRef.current.noUiSlider.updateOptions({
+      range: {
+        min: min,
+        max: max,
+      },
+    });
   }, [min, max]);
 
   useEffect(() => {
