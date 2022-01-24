@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import * as noUiSlider from 'nouislider';
-import 'nouislider/dist/nouislider.css';
+import React, { useEffect, useRef, useState } from 'react';
 import { resolveReferences } from '@/_helpers/utils';
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 export const RangeSlider = function RangeSlider({
   component,
@@ -11,84 +11,83 @@ export const RangeSlider = function RangeSlider({
   styles,
   onComponentOptionsChanged,
 }) {
-  const { value, min, max, enableTwoHandle, enableConnect } = properties;
-  const { lineColor, handleColor, connectColor, visibility } = styles;
+  const { value, min, max, enableTwoHandle } = properties;
+  const { trackColor, handleColor, lineColor, visibility } = styles;
   const sliderRef = useRef(null);
+  const [sliderValue, setSliderValue] = useState(0);
 
   const computedStyles = {
     height,
-    display: visibility ? '' : 'none',
+    display: visibility ? 'flex' : 'none',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '0px 2px',
   };
-
-  const toArray = (data) => (Array.isArray(data) ? data : [data, max]);
-
-  const setConnect = () => {
-    if (enableConnect) {
-      if (enableTwoHandle) {
-        return [true, false, true];
-      }
-      return 'lower';
-    }
-  };
-
-  const setSliderStyles = () => {
-    sliderRef.current.querySelector('.noUi-base').style.background = lineColor;
-    sliderRef.current.querySelector('.noUi-handle').style.background = handleColor;
-    enableConnect && (sliderRef.current.querySelector('.noUi-connect').style.background = connectColor);
-  };
-
-  async function initializeSlider() {
-    sliderRef.current.noUiSlider && sliderRef.current.noUiSlider.destroy();
-    noUiSlider.create(sliderRef.current, {
-      start: enableTwoHandle ? toArray(value) : Array.isArray(value) ? value[0] : value,
-      range: {
-        min: 0,
-        max: 100,
-      },
-      connect: setConnect(),
-    });
-    sliderRef.current.noUiSlider.on('set', () => {
-      onComponentOptionsChanged(component, [
-        ['value', resolveReferences(sliderRef.current.noUiSlider.get(true), currentState)],
-      ]);
-    });
-    setSliderStyles();
-  }
 
   useEffect(() => {
-    async function setup() {
-      await initializeSlider();
-      onComponentOptionsChanged(component, [
-        ['value', resolveReferences(sliderRef.current.noUiSlider.get(true), currentState)],
-      ]);
-    }
-    setup();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enableTwoHandle, enableConnect]);
-
-  useEffect(() => {
-    sliderRef.current.noUiSlider.set(enableTwoHandle ? toArray(value) : value);
+    setSliderValue(value);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
-  // Update min and max
   useEffect(() => {
-    sliderRef.current.noUiSlider.updateOptions({
-      range: {
-        min: min,
-        max: max,
-      },
-    });
-  }, [min, max]);
+    onComponentOptionsChanged(component, [
+      ['value', resolveReferences(enableTwoHandle ? toArray(value) : value, currentState)],
+    ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sliderRef.current, enableTwoHandle]);
+
+  const toArray = (data) => (Array.isArray(data) ? data : [data, max]);
 
   useEffect(() => {
-    setSliderStyles();
+    onComponentOptionsChanged(component, [['value', resolveReferences(sliderValue, currentState)]]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lineColor, handleColor, connectColor]);
+  }, [sliderValue]);
+
+  const onChange = (value) => setSliderValue(value);
+
+  const rangeStyles = {
+    handleStyle: toArray(sliderValue).map(() => {
+      return {
+        backgroundColor: handleColor,
+        borderColor: handleColor,
+      };
+    }),
+    trackStyle: toArray(sliderValue).map(() => {
+      return { backgroundColor: trackColor };
+    }),
+    railStyle: { backgroundColor: lineColor },
+  };
 
   return (
     <div style={computedStyles} className="range-slider">
-      <div id="slider" ref={sliderRef}></div>
+      {enableTwoHandle ? (
+        <Range
+          min={min}
+          max={max}
+          defaultValue={toArray(sliderValue)}
+          onChange={onChange}
+          value={toArray(sliderValue)}
+          ref={sliderRef}
+          trackStyle={rangeStyles.trackStyle}
+          railStyle={rangeStyles.railStyle}
+          handleStyle={rangeStyles.handleStyle}
+        />
+      ) : (
+        <Slider
+          min={min}
+          max={max}
+          defaultValue={sliderValue}
+          value={sliderValue}
+          ref={sliderRef}
+          onChange={onChange}
+          trackStyle={{ backgroundColor: trackColor }}
+          railStyle={{ backgroundColor: lineColor }}
+          handleStyle={{
+            backgroundColor: handleColor,
+            borderColor: handleColor,
+          }}
+        />
+      )}
     </div>
   );
 };
