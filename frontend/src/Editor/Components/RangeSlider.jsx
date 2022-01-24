@@ -40,15 +40,17 @@ export const RangeSlider = function RangeSlider({
   async function initializeSlider() {
     sliderRef.current.noUiSlider && sliderRef.current.noUiSlider.destroy();
     noUiSlider.create(sliderRef.current, {
-      start: enableTwoHandle ? toArray(value) : value,
+      start: enableTwoHandle ? toArray(value) : Array.isArray(value) ? value[0] : value,
       range: {
         min: 0,
         max: 100,
       },
       connect: setConnect(),
     });
-    sliderRef.current.noUiSlider.on('set', (value) => {
-      onComponentOptionsChanged(component, [['value', resolveReferences(value, currentState)]]);
+    sliderRef.current.noUiSlider.on('end', () => {
+      onComponentOptionsChanged(component, [
+        ['value', resolveReferences(sliderRef.current.noUiSlider.get(true), currentState)],
+      ]);
     });
     setSliderStyles();
   }
@@ -57,19 +59,12 @@ export const RangeSlider = function RangeSlider({
     async function setup() {
       await initializeSlider();
       onComponentOptionsChanged(component, [
-        ['value', resolveReferences(sliderRef.current.noUiSlider.get(), currentState)],
+        ['value', resolveReferences(sliderRef.current.noUiSlider.get(true), currentState)],
       ]);
     }
     setup();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enableTwoHandle, enableConnect]);
-
-  const convertValueToFloat = (value) => {
-    if (Array.isArray(value)) {
-      return value.map((item) => `${item.toFixed(2)}`);
-    }
-    return `${value.toFixed(2)}`;
-  };
 
   useEffect(() => {
     sliderRef.current.noUiSlider.set(enableTwoHandle ? toArray(value) : value);
