@@ -47,7 +47,7 @@ export const RangeSlider = function RangeSlider({
       },
       connect: setConnect(),
     });
-    sliderRef.current.noUiSlider.on('end', () => {
+    sliderRef.current.noUiSlider.on('set', () => {
       onComponentOptionsChanged(component, [
         ['value', resolveReferences(sliderRef.current.noUiSlider.get(true), currentState)],
       ]);
