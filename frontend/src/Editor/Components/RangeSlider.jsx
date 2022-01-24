@@ -1,16 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { resolveReferences } from '@/_helpers/utils';
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-export const RangeSlider = function RangeSlider({
-  component,
-  currentState,
-  height,
-  properties,
-  styles,
-  onComponentOptionsChanged,
-}) {
+export const RangeSlider = function RangeSlider({ height, properties, styles, setExposedVariable }) {
   const { value, min, max, enableTwoHandle } = properties;
   const { trackColor, handleColor, lineColor, visibility } = styles;
   const sliderRef = useRef(null);
@@ -30,16 +22,14 @@ export const RangeSlider = function RangeSlider({
   }, [value]);
 
   useEffect(() => {
-    onComponentOptionsChanged(component, [
-      ['value', resolveReferences(enableTwoHandle ? toArray(value) : value, currentState)],
-    ]);
+    setExposedVariable('value', enableTwoHandle ? toArray(value) : value);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sliderRef.current, enableTwoHandle]);
 
   const toArray = (data) => (Array.isArray(data) ? data : [data, max]);
 
   useEffect(() => {
-    onComponentOptionsChanged(component, [['value', resolveReferences(sliderValue, currentState)]]);
+    setExposedVariable('value', sliderValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sliderValue]);
 
