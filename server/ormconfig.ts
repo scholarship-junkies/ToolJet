@@ -15,7 +15,7 @@ function buildConnectionOptions(filePath: string, env: string | undefined): Type
   const connectionParams = process.env.DATABASE_URL
     ? {
         url: process.env.DATABASE_URL,
-        ssl: { rejectUnauthorized: false },
+        ssl: { rejectUnauthorized: data.PG_SSL === 'true' },
       }
     : {
         database: data.PG_DB,
@@ -27,6 +27,7 @@ function buildConnectionOptions(filePath: string, env: string | undefined): Type
         extra: {
           max: 25,
         },
+        ssl: data.PG_SSL === 'true' ? { rejectUnauthorized: true } : undefined,
       };
 
   const entitiesDir =
