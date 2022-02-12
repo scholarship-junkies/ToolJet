@@ -73,9 +73,9 @@ export class DataQueriesService {
     return dataQuery;
   }
 
-  async fetchServiceAndParsedParams(dataSource, dataQuery, queryOptions) {
+  async fetchServiceAndParsedParams(dataSource, dataQuery, queryOptions, user) {
     const sourceOptions = await this.parseSourceOptions(dataSource.options);
-    const parsedQueryOptions = await this.parseQueryOptions(dataQuery.options, queryOptions);
+    const parsedQueryOptions = await this.parseQueryOptions(dataQuery.options, queryOptions, user);
     const kind = dataQuery.kind;
     const service = new allPlugins[kind]();
     return { service, sourceOptions, parsedQueryOptions };
@@ -86,7 +86,8 @@ export class DataQueriesService {
     let { sourceOptions, parsedQueryOptions, service } = await this.fetchServiceAndParsedParams(
       dataSource,
       dataQuery,
-      queryOptions
+      queryOptions,
+      user
     );
     let result;
 
@@ -103,7 +104,8 @@ export class DataQueriesService {
         ({ sourceOptions, parsedQueryOptions, service } = await this.fetchServiceAndParsedParams(
           dataSource,
           dataQuery,
-          queryOptions
+          queryOptions,
+          user
         ));
 
         result = await service.run(sourceOptions, parsedQueryOptions, dataSource.id, dataSource.updatedAt);
@@ -176,23 +178,31 @@ export class DataQueriesService {
     return parsedOptions;
   }
 
-  async parseQueryOptions(object: any, options: object): Promise<object> {
+  async parseQueryOptions(object: any, options: object, user: User | undefined): Promise<object> {
     if (typeof object === 'object' && object !== null) {
       for (const key of Object.keys(object)) {
-        object[key] = await this.parseQueryOptions(object[key], options);
+        object[key] = await this.parseQueryOptions(object[key], options, user);
       }
       return object;
     } else if (typeof object === 'string') {
       object = object.replace(/\n/g, ' ');
       if (object.startsWith('{{') && object.endsWith('}}') && (object.match(/{{/g) || []).length === 1) {
-        object = options[object];
+        if (object === '{{server.currentUser.email}}') {
+          object = user?.email;
+        } else {
+          object = options[object];
+        }
         return object;
       } else {
         const variables = object.match(/\{\{(.*?)\}\}/g);
 
         if (variables?.length > 0) {
           for (const variable of variables) {
-            object = object.replace(variable, options[variable]);
+            if (variable === '{{server.currentUser.email}}') {
+              object = object.replace(variable, user?.email);
+            } else {
+              object = object.replace(variable, options[variable]);
+            }
           }
         }
 
@@ -202,7 +212,7 @@ export class DataQueriesService {
       object.forEach((element) => {});
 
       for (const [index, element] of object) {
-        object[index] = await this.parseQueryOptions(element, options);
+        object[index] = await this.parseQueryOptions(element, options, user);
       }
       return object;
     }
