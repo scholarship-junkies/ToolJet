@@ -11,10 +11,12 @@ export class SeedsService {
   constructor(private readonly entityManager: EntityManager) {}
 
   async perform(): Promise<void> {
+    const seedEmail = process.env.SEED_EMAIL || 'dev@tooljet.io';
+    const seedPassword = process.env.SEED_PASSWORD || 'password';
     await this.entityManager.transaction(async (manager) => {
       const defaultUser = await manager.findOne(User, {
         where: {
-          email: 'dev@tooljet.io',
+          email: seedEmail,
         },
       });
 
@@ -32,8 +34,8 @@ export class SeedsService {
       const user = manager.create(User, {
         firstName: 'The',
         lastName: 'Developer',
-        email: 'dev@tooljet.io',
-        password: 'password',
+        email: seedEmail,
+        password: seedPassword,
         organizationId: organization.id,
       });
 
