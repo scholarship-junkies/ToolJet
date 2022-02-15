@@ -29,6 +29,12 @@
         "type": "codehinter",
         "description": "Enter query",
         "height": "150px"
+      },
+      "parameters": {
+        "key": "parameters",
+        "type": "codehinter",
+        "description": "Enter parameters (one per line)",
+        "height": "150px"
       }
     },
     "gui": {

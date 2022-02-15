@@ -46,9 +46,10 @@ export default class PostgresqlQueryService implements QueryService {
       }
     } else {
       query = queryOptions.query;
+      console.log(query);
     }
 
-    result = await pool.query(query);
+    result = await pool.query(query, queryOptions.parameters.split('\n').slice(0, -1));
 
     return {
       status: "ok",
