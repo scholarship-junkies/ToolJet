@@ -10,5 +10,5 @@ export type QueryOptions = {
   operation: string;
   query: string;
   mode: string;
-  parameters: string;
+  parametersJSON: string;
 };

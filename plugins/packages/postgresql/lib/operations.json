@@ -30,11 +30,11 @@
         "description": "Enter query",
         "height": "150px"
       },
-      "parameters": {
-        "key": "parameters",
+      "parametersJSON": {
+        "key": "parametersJSON",
         "type": "codehinter",
-        "description": "Enter parameters (one per line)",
-        "height": "150px"
+        "description": "Enter parameters as JSON array",
+        "height": "75px"
       }
     },
     "gui": {

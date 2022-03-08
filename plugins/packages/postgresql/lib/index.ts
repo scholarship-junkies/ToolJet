@@ -46,10 +46,21 @@ export default class PostgresqlQueryService implements QueryService {
       }
     } else {
       query = queryOptions.query;
-      console.log(query);
     }
 
-    result = await pool.query(query, queryOptions.parameters.split('\n').slice(0, -1));
+    let queryParams: unknown = [];
+    if (queryOptions.parametersJSON !== '') {
+      try {
+        queryParams = JSON.parse(queryOptions.parametersJSON);
+        if (!Array.isArray(queryParams)) {
+          queryParams = [];
+          console.warn('Postgres query parameters must be a valid JSON array.');
+        }
+      } catch (err) {
+        console.warn('Postgres query parameters must be an empty string or valid JSON.');
+      }
+    }
+    result = await pool.query(query, queryParams);
 
     return {
       status: "ok",
