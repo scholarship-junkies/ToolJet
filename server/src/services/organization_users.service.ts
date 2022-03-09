@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { getManager, Repository } from 'typeorm';
@@ -15,7 +16,8 @@ export class OrganizationUsersService {
     @InjectRepository(OrganizationUser)
     private organizationUsersRepository: Repository<OrganizationUser>,
     private usersService: UsersService,
-    private emailService: EmailService
+    private emailService: EmailService,
+    private readonly configService: ConfigService
   ) {}
 
   async findOne(id: string): Promise<OrganizationUser> {
@@ -36,12 +38,14 @@ export class OrganizationUsersService {
     const user = await this.usersService.create(userParams, currentUser.organization, ['all_users']);
     const organizationUser = await this.create(user, currentUser.organization);
 
-    await this.emailService.sendOrganizationUserWelcomeEmail(
-      user.email,
-      user.firstName,
-      currentUser.firstName,
-      user.invitationToken
-    );
+    if (this.configService.get<string>('DISABLE_PASSWORD_LOGIN') !== 'true') {
+      await this.emailService.sendOrganizationUserWelcomeEmail(
+        user.email,
+        user.firstName,
+        currentUser.firstName,
+        user.invitationToken
+      );
+    }
 
     return organizationUser;
   }
@@ -98,12 +102,14 @@ export class OrganizationUsersService {
 
     const updatedUser = await this.usersService.findOne(organizationUser.userId);
 
-    await this.emailService.sendOrganizationUserWelcomeEmail(
-      updatedUser.email,
-      updatedUser.firstName,
-      user.firstName,
-      updatedUser.invitationToken
-    );
+    if (this.configService.get<string>('DISABLE_PASSWORD_LOGIN') !== 'true') {
+      await this.emailService.sendOrganizationUserWelcomeEmail(
+        updatedUser.email,
+        updatedUser.firstName,
+        user.firstName,
+        updatedUser.invitationToken
+      );
+    }
 
     return true;
   }
