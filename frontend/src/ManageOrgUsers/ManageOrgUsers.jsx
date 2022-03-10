@@ -39,14 +39,14 @@ class ManageOrgUsers extends React.Component {
     if (!fields['firstName']) {
       errors['firstName'] = 'This field is required';
     } else if (typeof fields['firstName'] !== 'undefined') {
-      if (!/^[a-zA-Z]+$/.test(fields['firstName'])) {
+      if (!/^[a-zA-Z0-9]([ -]?[a-zA-Z0-9])*$/.test(fields['firstName'])) {
         errors['firstName'] = 'Only letters are allowed';
       }
     }
     if (!fields['lastName']) {
       errors['lastName'] = 'This field is required';
     } else if (typeof fields['lastName'] !== 'undefined') {
-      if (!/^[a-zA-Z]+$/.test(fields['lastName'])) {
+      if (!/^[a-zA-Z0-9]([ -]?[a-zA-Z0-9])*$/.test(fields['lastName'])) {
         errors['lastName'] = 'Only letters are allowed';
       }
     }
