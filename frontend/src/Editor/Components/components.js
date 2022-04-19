@@ -132,6 +132,7 @@ export const componentTypes = [
     styles: {
       backgroundColor: { type: 'color', displayName: 'Background color' },
       textColor: { type: 'color', displayName: 'Text color' },
+      loaderColor: { type: 'color', displayName: 'Loader color' },
       visibility: { type: 'toggle', displayName: 'Visibility' },
       disabledState: { type: 'toggle', displayName: 'Disable' },
       borderRadius: { type: 'number', displayName: 'Border radius' },
@@ -151,6 +152,7 @@ export const componentTypes = [
       styles: {
         backgroundColor: { value: '#375FCF' },
         textColor: { value: '#fff' },
+        loaderColor: { value: '#fff' },
         visibility: { value: '{{true}}' },
         borderRadius: { value: '{{0}}' },
         disabledState: { value: '{{false}}' },
@@ -666,7 +668,8 @@ export const componentTypes = [
       borderRadius: { type: 'code', displayName: 'Border radius' },
     },
     exposedVariables: {
-      value: {},
+      value:
+        'ToolJet is an open-source low-code platform for building and deploying internal tools with minimal engineering efforts 🚀',
     },
     definition: {
       others: {
@@ -702,6 +705,8 @@ export const componentTypes = [
       showOnMobile: { type: 'toggle', displayName: 'Show on mobile' },
     },
     properties: {
+      defaultStartDate: { type: 'code', displayName: 'Default start date' },
+      defaultEndDate: { type: 'code', displayName: 'Default end date' },
       format: { type: 'code', displayName: 'Format' },
     },
     events: {},
@@ -720,6 +725,9 @@ export const componentTypes = [
         showOnMobile: { value: '{{false}}' },
       },
       properties: {
+        defaultStartDate: { value: '01/04/2022' },
+        defaultEndDate: { value: '10/04/2022' },
+
         format: { value: 'DD/MM/YYYY' },
       },
       events: [],
@@ -740,6 +748,7 @@ export const componentTypes = [
       showOnMobile: { type: 'toggle', displayName: 'Show on mobile' },
     },
     properties: {
+      defaultValue: { type: 'code', displayName: 'Default value' },
       text: { type: 'code', displayName: 'Text' },
       loadingState: { type: 'toggle', displayName: 'Show loading state' },
     },
@@ -900,6 +909,7 @@ export const componentTypes = [
       visibility: { type: 'toggle', displayName: 'Visibility' },
       selectedTextColor: { type: 'color', displayName: 'Selected Text Color' },
       disabledState: { type: 'toggle', displayName: 'Disable' },
+      justifyContent: { type: 'alignButtons', displayName: 'Align Text' },
     },
     exposedVariables: {
       value: null,
@@ -926,6 +936,7 @@ export const componentTypes = [
         borderRadius: { value: '0' },
         visibility: { value: '{{true}}' },
         disabledState: { value: '{{false}}' },
+        justifyContent: { value: 'left' },
       },
     },
   },
@@ -934,7 +945,7 @@ export const componentTypes = [
     displayName: 'Multiselect',
     description: 'Select multiple values from options',
     defaultSize: {
-      width: 8,
+      width: 12,
       height: 30,
     },
     component: 'Multiselect',
@@ -947,6 +958,7 @@ export const componentTypes = [
       value: { type: 'code', displayName: 'Default value' },
       values: { type: 'code', displayName: 'Option values' },
       display_values: { type: 'code', displayName: 'Option labels' },
+      showAllOption: { type: 'toggle', displayName: 'Enable select All option' },
     },
     events: {
       onSelect: { displayName: 'On select' },
@@ -1481,6 +1493,7 @@ export const componentTypes = [
     properties: {
       tabs: { type: 'code', displayName: 'Tabs' },
       defaultTab: { type: 'code', displayName: 'Default tab' },
+      hideTabs: { type: 'toggle', displayName: 'Hide Tabs' },
     },
     events: {},
     styles: {
@@ -1488,7 +1501,7 @@ export const componentTypes = [
       visibility: { type: 'toggle', displayName: 'Visibility' },
       disabledState: { type: 'toggle', displayName: 'Disable' },
     },
-    exposedVariables: {},
+    exposedVariables: { currentTab: '' },
     definition: {
       others: {
         showOnDesktop: { value: '{{true}}' },
@@ -1500,6 +1513,7 @@ export const componentTypes = [
             "{{[ \n\t\t{ title: 'Home', id: '0' }, \n\t\t{ title: 'Profile', id: '1' }, \n\t\t{ title: 'Settings', id: '2' } \n ]}}",
         },
         defaultTab: { value: '0' },
+        hideTabs: { value: false },
       },
       events: [],
       styles: {
@@ -1562,6 +1576,18 @@ export const componentTypes = [
           value: 'countUp',
         },
       },
+      defaults: [
+        {
+          type: 'countUp',
+          value: '00:00:00:000',
+          paramName: 'value',
+        },
+        {
+          type: 'countDown',
+          value: '00:00:10:000',
+          paramName: 'value',
+        },
+      ],
       events: [],
       styles: {
         visibility: { value: '{{true}}' },
@@ -1820,6 +1846,7 @@ export const componentTypes = [
     properties: {
       primaryValueLabel: { type: 'code', displayName: 'Primary value label' },
       primaryValue: { type: 'code', displayName: 'Primary value' },
+      hideSecondary: { type: 'toggle', displayName: 'Hide secondary value' },
       secondaryValueLabel: { type: 'code', displayName: 'Secondary value label' },
       secondaryValue: { type: 'code', displayName: 'Secondary value' },
       secondarySignDisplay: { type: 'code', displayName: 'Secondary sign display' },
@@ -1850,6 +1877,104 @@ export const componentTypes = [
         primaryTextColour: { value: '#000000' },
         secondaryLabelColour: { value: '#8092AB' },
         secondaryTextColour: { value: '#36AF8B' },
+        visibility: { value: '{{true}}' },
+      },
+    },
+  },
+  {
+    name: 'RangeSlider',
+    displayName: 'Range slider',
+    description: 'Can be used to show slider with a range',
+    component: 'RangeSlider',
+    defaultSize: {
+      width: 9,
+      height: 30,
+    },
+    others: {
+      showOnDesktop: { type: 'toggle', displayName: 'Show on desktop' },
+      showOnMobile: { type: 'toggle', displayName: 'Show on mobile' },
+    },
+    properties: {
+      min: { type: 'number', displayName: 'Min' },
+      max: { type: 'number', displayName: 'Max' },
+      value: { type: 'code', displayName: 'Value' },
+      enableTwoHandle: { type: 'toggle', displayName: 'Two handles' },
+    },
+    events: {},
+    styles: {
+      lineColor: { type: 'color', displayName: 'Line color' },
+      handleColor: { type: 'color', displayName: 'Handle color' },
+      trackColor: { type: 'color', displayName: 'Track color' },
+      visibility: { type: 'code', displayName: 'Visibility' },
+    },
+    exposedVariables: {
+      value: null,
+    },
+    definition: {
+      others: {
+        showOnDesktop: { value: true },
+        showOnMobile: { value: false },
+      },
+      properties: {
+        min: {
+          value: '{{0}}',
+        },
+        max: {
+          value: '{{100}}',
+        },
+        value: {
+          value: '{{50}}',
+        },
+        enableTwoHandle: { value: false },
+      },
+      events: [],
+      styles: {
+        lineColor: { value: '#E9E9E9' },
+        handleColor: { value: '#4D72FA' },
+        trackColor: { value: '#4D72FA' },
+        visibility: { value: '{{true}}' },
+      },
+    },
+  },
+  {
+    name: 'Timeline',
+    displayName: 'Timeline',
+    description: 'Visual representation of a sequence of events',
+    component: 'Timeline',
+    properties: {
+      data: { type: 'code', displayName: 'Timeline data' },
+      hideDate: { type: 'toggle', displayName: 'Hide Date' },
+    },
+    defaultSize: {
+      width: 20,
+      height: 270,
+    },
+    others: {
+      showOnDesktop: { type: 'toggle', displayName: 'Show on desktop' },
+      showOnMobile: { type: 'toggle', displayName: 'Show on mobile' },
+    },
+    events: {},
+    styles: {
+      visibility: { type: 'toggle', displayName: 'Visibility' },
+    },
+    exposedVariables: {
+      value: {},
+    },
+    definition: {
+      others: {
+        showOnDesktop: { value: '{{true}}' },
+        showOnMobile: { value: '{{false}}' },
+      },
+      properties: {
+        visible: { value: '{{true}}' },
+        data: {
+          value:
+            "{{ [ \n\t\t{ title: 'Product Launched', subTitle: 'First version of our product released to public', date: '20/10/2021', iconBackgroundColor: '#4d72fa'},\n\t\t { title: 'First Signup', subTitle: 'Congratulations! We got our first signup', date: '22/10/2021', iconBackgroundColor: '#4d72fa'}, \n\t\t { title: 'First Payment', subTitle: 'Hurray! We got our first payment', date: '01/11/2021', iconBackgroundColor: '#4d72fa'} \n] }}",
+        },
+        hideDate: { value: false },
+      },
+      events: [],
+      styles: {
         visibility: { value: '{{true}}' },
       },
     },

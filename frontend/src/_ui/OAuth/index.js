@@ -10,6 +10,7 @@ const OAuth = ({
   client_secret,
   client_auth,
   custom_auth_params,
+  custom_query_params,
   scopes,
   auth_url,
   header_prefix,
@@ -25,6 +26,8 @@ const OAuth = ({
         ]}
         value={auth_type}
         onChange={(value) => optionchanged('auth_type', value)}
+        width={'100%'}
+        useMenuPortal={false}
       />
       <Authentication
         add_token_to={add_token_to}
@@ -34,6 +37,7 @@ const OAuth = ({
         grant_type={grant_type}
         optionchanged={optionchanged}
         custom_auth_params={custom_auth_params}
+        custom_query_params={custom_query_params}
         client_id={client_id}
         client_secret={client_secret}
         client_auth={client_auth}

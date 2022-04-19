@@ -1,10 +1,9 @@
 import 'codemirror/theme/duotone-light.css';
 
 import React from 'react';
-import Select from 'react-select';
 import { isEmpty, defaults } from 'lodash';
 import Tabs from './Tabs';
-
+import Select from '@/_ui/Select';
 import { changeOption } from '../utils';
 import { CodeHinter } from '../../../CodeBuilder/CodeHinter';
 import { BaseUrl } from './BaseUrl';
@@ -145,17 +144,18 @@ class Restapi extends React.Component {
                 { label: 'PATCH', value: 'patch' },
                 { label: 'DELETE', value: 'delete' },
               ]}
-              onChange={(object) => {
-                changeOption(this, 'method', object.value);
+              onChange={(value) => {
+                changeOption(this, 'method', value);
               }}
               value={currentValue}
               defaultValue={{ label: 'GET', value: 'get' }}
               placeholder="Method"
-              styles={selectStyles}
+              width={100}
+              height={32}
             />
           </div>
 
-          <div className="col field mx-3 w-100" style={{ display: 'flex', maxWidth: '700px' }}>
+          <div className="col field w-100" style={{ display: 'flex', marginLeft: 16 }}>
             {dataSourceURL && (
               <BaseUrl theme={this.props.darkMode ? 'monokai' : 'default'} dataSourceURL={dataSourceURL} />
             )}
@@ -177,7 +177,7 @@ class Restapi extends React.Component {
           </div>
         </div>
 
-        <div className={`query-pane-restapi-tabs mt-3 px-2 ${this.props.darkMode ? 'dark' : ''}`}>
+        <div className={`query-pane-restapi-tabs mt-3 ${this.props.darkMode ? 'dark' : ''}`}>
           <Tabs
             theme={this.props.darkMode ? 'monokai' : 'default'}
             options={this.state.options}
