@@ -26,7 +26,13 @@ export class SeedsService {
       }
 
       const organization = manager.create(Organization, {
-        name: 'My organization',
+        ssoConfigs: [
+          {
+            enabled: true,
+            sso: 'form',
+          },
+        ],
+        name: 'My workspace',
       });
 
       await manager.save(organization);
@@ -36,8 +42,9 @@ export class SeedsService {
         lastName: 'Developer',
         email: seedEmail,
         password: seedPassword,
-        organizationId: organization.id,
+        defaultOrganizationId: organization.id,
       });
+      user.organizationId = organization.id;
 
       await manager.save(user);
 
